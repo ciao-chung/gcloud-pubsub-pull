@@ -2,18 +2,16 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use Google\Cloud\PubSub\Message;
 use Illuminate\Console\Command;
 use Google\Cloud\PubSub\PubSubClient;
 
 class PullMessages extends Command
 {
-    protected $serviceAccountKeyPath, $topicName, $subscription, $subscriptionName;
+    protected $serviceAccountKeyPath, $subscription, $subscriptionName;
     protected $signature = 'pull-messages
-{topic : 訂閱項目名稱}
+{sub : 訂閱項目名稱}
 {--path= : service account金鑰路徑}
-{--sub= : 訂閱項目名稱}
 ';
     protected $description = 'Pull gCloud Pub/Sub訊息';
 
@@ -24,8 +22,7 @@ class PullMessages extends Command
 
     public function handle()
     {
-        $this->topicName = $this->argument('topic');
-        $this->subscriptionName = $this->option('sub');
+        $this->subscriptionName = $this->argument('sub');
         $this->serviceAccountKeyPath = $this->option('path');
         $this->pull();
     }
@@ -36,11 +33,12 @@ class PullMessages extends Command
             'keyFilePath' => $this->serviceAccountKeyPath,
         ]);
         $this->subscription = $pubSub->subscription($this->subscriptionName);
-        $messages = $this->subscription->pull();
         $this->line('開始Pull');
+        $messages = $this->subscription->pull();
         foreach ($messages as $index => $message) {
             $this->processMessage($index, $message);
         }
+        $this->question('訊息Pull完成');
     }
 
     protected function processMessage(int $index, Message $message)
