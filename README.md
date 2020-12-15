@@ -17,3 +17,11 @@ php artisan push-message [TOPIC-NAME] --path=[SERVICE-ACCOUNT-KEY-PATH]
 ```bash
 php artisan pull-messages [SUBSCRIPTION-NAME] --path=[SERVICE-ACCOUNT-KEY-PATH]
 ```
+
+## Push Subscription API
+
+> {POST} /api/receive-notification
+
+## Log Viewer Route
+
+> /logger/logs
