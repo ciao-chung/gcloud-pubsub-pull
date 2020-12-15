@@ -8,14 +8,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ExampleTest extends TestCase
 {
     /**
-     * A basic test example.
-     *
-     * @return void
+     * @group test
      */
     public function testBasicTest()
     {
-        $response = $this->get('/');
+        // arrange
+        $params = [
+            'foobar' => 'foobar',
+        ];
 
+        // act
+        $response = $this->json('POST', '/api/receive-notification', $params);
+
+        // assert
         $response->assertStatus(200);
     }
 }
